@@ -1,0 +1,19 @@
+project-includes = ["."]
+project-excludes = [
+    "**/__pycache__",
+    ".venv",
+]
+infer-with-first-use = false
+
+[errors]
+missing-import = "ignore"
+missing-source = "ignore"
+missing-source-for-stubs = "ignore"
+untyped-import = "ignore"
+bad-assignment = "ignore"
+bad-argument-type = "ignore"
+missing-attribute = "ignore"
+no-matching-overload = "ignore"
+
+[[sub-config]]
+matches = "."
