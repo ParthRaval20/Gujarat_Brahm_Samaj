@@ -86,7 +86,7 @@ CHEVRON_DOWN_BLUE_PATH: str = os.path.join(ICON_DIR, 'chevron_down_blue.svg')
 
 # ---------- App metadata ----------
 APP_NAME: str = 'Gujarat Brahm Samaj Management System'
-APP_VERSION: str = '1.0'
+APP_VERSION: str = '1.1'
 WINDOW_TITLE: str = 'શ્રી સમસ્ત ગુજરાત બ્રહ્મ સમાજ — સભ્ય વ્યવસ્થાપન પોર્ટલ'
 
 # ---------- Developer / Company metadata ----------
