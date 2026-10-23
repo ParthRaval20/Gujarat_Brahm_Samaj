@@ -32,6 +32,7 @@ COMMON_GUJ_TO_ENG = {
     'માતા': 'Mother',
     'પુત્ર': 'Son',
     'પુત્રી': 'Daughter',
+    'પુત્રવધૂ': 'Daughter-in-law',
     'પત્ની': 'Wife',
     'પતિ': 'Husband',
     'ભાઈ': 'Brother',

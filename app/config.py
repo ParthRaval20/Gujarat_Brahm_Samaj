@@ -81,6 +81,8 @@ GUJARATI_FONT_REGULAR: str = os.path.join(FONT_DIR, 'NotoSansGujarati-Regular.tt
 GUJARATI_FONT_BOLD: str = os.path.join(FONT_DIR, 'NotoSansGujarati-Bold.ttf')
 LOGO_PATH: str = os.path.join(IMAGE_DIR, 'logo.png')
 APP_ICON_PATH: str = os.path.join(ICON_DIR, 'app_icon.ico')
+CHEVRON_DOWN_PATH: str = os.path.join(ICON_DIR, 'chevron_down.svg')
+CHEVRON_DOWN_BLUE_PATH: str = os.path.join(ICON_DIR, 'chevron_down_blue.svg')
 
 # ---------- App metadata ----------
 APP_NAME: str = 'Gujarat Brahm Samaj Management System'
@@ -101,7 +103,7 @@ MEMBER_CODE_PREFIX: str = 'GBS'
 BLOOD_GROUPS: list[str] = ['', 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
 
 RELATION_TYPES: list[str] = [
-    '', 'પત્ની (Wife)', 'પુત્ર (Son)', 'પુત્રી (Daughter)', 'પતિ (Husband)',
+    '', 'પત્ની (Wife)', 'પુત્ર (Son)', 'પુત્રી (Daughter)', 'પુત્રવધૂ (Daughter-in-law)', 'પતિ (Husband)',
     'પિતા (Father)', 'માતા (Mother)', 'ભાઈ (Brother)', 'બહેન (Sister)',
     'દાદા (Grand Father)', 'દાદી (Grand Mother)', 'અન્ય (Other)',
 ]

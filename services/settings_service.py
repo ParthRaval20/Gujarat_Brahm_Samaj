@@ -82,10 +82,10 @@ class SettingsService:
         with get_session() as session:
             row = session.query(AppSetting).filter_by(setting_key=key).first()
             if row:
-                row.setting_value = str(value)
+                row.setting_value = value
                 row.updated_at = now
             else:
-                session.add(AppSetting(setting_key=key, setting_value=str(value), updated_at=now))
+                session.add(AppSetting(setting_key=key, setting_value=value, updated_at=now))
             session.commit()
 
     def set_many(self, settings_dict: dict[str, str]) -> None:
@@ -95,10 +95,10 @@ class SettingsService:
             for key, val in settings_dict.items():
                 row = session.query(AppSetting).filter_by(setting_key=key).first()
                 if row:
-                    row.setting_value = str(val)
+                    row.setting_value = val
                     row.updated_at = now
                 else:
-                    session.add(AppSetting(setting_key=key, setting_value=str(val), updated_at=now))
+                    session.add(AppSetting(setting_key=key, setting_value=val, updated_at=now))
             session.commit()
 
     def optimize_database(self) -> tuple[bool, str]:

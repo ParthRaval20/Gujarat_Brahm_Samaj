@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
+# Distribution / packaging & Installers
 .Python
 build/
 develop-eggs/
@@ -26,12 +26,18 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+installer.iss
+Build_Installer.bat
 
-# PyInstaller
+# PyInstaller & Build Specs
 *.manifest
+*.spec
 *.spec.bak
 
-# Unit test / coverage reports
+# Scripts directory
+scripts/
+
+# Unit test / coverage reports & tests directory
 htmlcov/
 .tox/
 .nox/
@@ -45,6 +51,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+tests/
+pytest.ini
 
 # Environments
 .env

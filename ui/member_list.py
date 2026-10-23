@@ -487,6 +487,11 @@ class MemberListPage(QWidget):
                     border: 1px solid #BFDBFE; border-radius: 6px; font-size: 12px;
                 }
                 QPushButton:hover { background-color: #DBEAFE; }
+                QToolTip {
+                    background-color: #0F172A; color: #FFFFFF;
+                    border: 1px solid #334155; border-radius: 6px;
+                    padding: 5px 9px; font-size: 11px; font-weight: 500;
+                }
             """)
             mid = member.id
             btn_view.clicked.connect(lambda _, m=mid: self._nav('profile', member_id=m))
@@ -501,6 +506,11 @@ class MemberListPage(QWidget):
                     border: 1px solid #A7F3D0; border-radius: 6px; font-size: 12px;
                 }
                 QPushButton:hover { background-color: #D1FAE5; }
+                QToolTip {
+                    background-color: #0F172A; color: #FFFFFF;
+                    border: 1px solid #334155; border-radius: 6px;
+                    padding: 5px 9px; font-size: 11px; font-weight: 500;
+                }
             """)
             btn_edit.clicked.connect(lambda _, m=mid: self._nav('edit', member_id=m))
 
@@ -514,6 +524,11 @@ class MemberListPage(QWidget):
                     border: 1px solid #DDD6FE; border-radius: 6px; font-size: 12px;
                 }
                 QPushButton:hover { background-color: #EDE9FE; }
+                QToolTip {
+                    background-color: #0F172A; color: #FFFFFF;
+                    border: 1px solid #334155; border-radius: 6px;
+                    padding: 5px 9px; font-size: 11px; font-weight: 500;
+                }
             """)
             btn_print.clicked.connect(lambda _, m=mid: self._nav('form_preview', member_id=mid))
 
@@ -527,6 +542,11 @@ class MemberListPage(QWidget):
                     border: 1px solid #FECACA; border-radius: 6px; font-size: 12px;
                 }
                 QPushButton:hover { background-color: #FEE2E2; }
+                QToolTip {
+                    background-color: #0F172A; color: #FFFFFF;
+                    border: 1px solid #334155; border-radius: 6px;
+                    padding: 5px 9px; font-size: 11px; font-weight: 500;
+                }
             """)
             btn_del.clicked.connect(lambda _, m=mid: self._delete_member(m))
 

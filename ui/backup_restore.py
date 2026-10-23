@@ -57,7 +57,8 @@ class BackupRestorePage(QWidget):
         scroll.setStyleSheet(f"QScrollArea {{ background-color: {COLOR_BG}; border: none; }}")
 
         container = QWidget()
-        container.setStyleSheet(f"background-color: {COLOR_BG};")
+        container.setObjectName("backupContainer")
+        container.setStyleSheet(f"#backupContainer {{ background-color: {COLOR_BG}; }}")
         self.layout = QVBoxLayout(container)
         self.layout.setContentsMargins(28, 24, 28, 28)
         self.layout.setSpacing(22)
@@ -628,8 +629,8 @@ class BackupRestorePage(QWidget):
             is_en = (self._current_lang == 'en')
 
             last_bk = stats['last_backup']
-            if is_en and ("ક્યારેય" in last_bk or "નહીં" in last_bk):
-                last_bk = "Never"
+            if is_en and ("ક્યારેય" in last_bk or "નહીં" in last_bk or "કોઈ" in last_bk or "નથી" in last_bk):
+                last_bk = "None"
             self.card_last_val.setText(last_bk)
 
             count_txt = f"{stats['total_count']} Files Archived" if is_en else f"{stats['total_count']} ફાઇલ્સ સંગ્રહિત"
@@ -640,6 +641,8 @@ class BackupRestorePage(QWidget):
             health_txt = stats['health_message']
             if is_en:
                 health_txt = health_txt.replace("સ્વસ્થ (Healthy)", "Healthy").replace("સ્વસ્થ", "Healthy")
+                if "100%" in health_txt and "Healthy" in health_txt:
+                    health_txt = "100% Healthy — 0 Corrupted records"
             self.card_health_val.setText(health_txt)
 
             backups = list_backups()

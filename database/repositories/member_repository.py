@@ -26,7 +26,7 @@ class MemberRepository:
     def get_by_code_flexible(self, code_str: str) -> Optional[Member]:
         if not code_str:
             return None
-        clean = str(code_str).strip()
+        clean = code_str.strip()
         m = self._s.query(Member).filter(Member.member_code.ilike(clean)).first()
         if m:
             return m
@@ -45,7 +45,7 @@ class MemberRepository:
     def get_by_mobile(self, mobile: str) -> Optional[Member]:
         if not mobile:
             return None
-        clean_mob = "".join(ch for ch in str(mobile) if ch.isdigit())
+        clean_mob = "".join(ch for ch in mobile if ch.isdigit())
         if len(clean_mob) >= 10:
             last10 = clean_mob[-10:]
             return self._s.query(Member).filter(
@@ -56,7 +56,7 @@ class MemberRepository:
                     Member.mobile.like(f"%{last10}")
                 )
             ).first()
-        return self._s.query(Member).filter(Member.mobile == str(mobile).strip()).first()
+        return self._s.query(Member).filter(Member.mobile == mobile.strip()).first()
 
     def find_for_replace(
         self,

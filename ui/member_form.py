@@ -48,6 +48,7 @@ from app.config import (
     COLOR_BG, COLOR_BORDER, COLOR_TEXT_MAIN, COLOR_TEXT_MUTED,
     COLOR_ACCENT_BLUE, LOGO_PATH, EXPORT_DIR, DATA_DIR, ensure_dirs,
     EDUCATION_PRESETS_GU, EDUCATION_PRESETS_EN,
+    CHEVRON_DOWN_PATH, CHEVRON_DOWN_BLUE_PATH,
 )
 from database.connection import get_session
 from database.models import AppSetting
@@ -61,7 +62,7 @@ from utils.file_utils import get_pdf_filename
 
 # 8 Official Talukas of Sabarkantha District
 SABARKANTHA_TALUKAS: list[tuple[str, str]] = [
-    ("ઇડર", "Idar"),
+    ("ઈડર", "Idar"),
     ("હિંમતનગર", "Himatnagar"),
     ("પ્રાંતિજ", "Prantij"),
     ("તલોદ", "Talod"),
@@ -70,6 +71,63 @@ SABARKANTHA_TALUKAS: list[tuple[str, str]] = [
     ("વિજયનગર", "Vijaynagar"),
     ("પોશીના", "Poshina"),
 ]
+
+_CHEVRON_ICON_URL: str = CHEVRON_DOWN_PATH.replace('\\', '/')
+_CHEVRON_BLUE_ICON_URL: str = CHEVRON_DOWN_BLUE_PATH.replace('\\', '/')
+
+
+class _TalukaLineEditProxy:
+    """Compatibility proxy for legacy code and test assertions expecting a QLineEdit on taluka_combo."""
+    def __init__(self, combo: QComboBox):
+        self._combo = combo
+
+    def placeholderText(self) -> str:
+        return self._combo.placeholderText()
+
+    def setPlaceholderText(self, text: str) -> None:
+        self._combo.setPlaceholderText(text)
+
+    def text(self) -> str:
+        return self._combo.currentText().strip()
+
+    def setText(self, val: str) -> None:
+        val = (val or '').strip()
+        if not val:
+            self._combo.setCurrentIndex(-1)
+            return
+        idx = self._combo.findText(val)
+        if idx >= 0:
+            self._combo.setCurrentIndex(idx)
+            return
+        # Handle spelling variations (e.g. ઈડર vs ઇડર, case-insensitive)
+        for i in range(self._combo.count()):
+            txt = self._combo.itemText(i)
+            if not txt:
+                continue
+            if txt.lower() == val.lower() or ({txt.lower(), val.lower()} <= {'ઈડર', 'ઇડર'}):
+                self._combo.setCurrentIndex(i)
+                return
+        self._combo.addItem(val)
+        self._combo.setCurrentIndex(self._combo.count() - 1)
+
+    def clear(self) -> None:
+        self._combo.setCurrentIndex(-1)
+
+
+class TalukaComboBox(QComboBox):
+    """
+    Non-editable click-only dropdown for Taluka selection.
+    Provides backward-compatibility via .lineEdit() returning a proxy so existing
+    tests and callers function seamlessly without free-text typing.
+    """
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setEditable(False)
+        self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self._proxy = _TalukaLineEditProxy(self)
+
+    def lineEdit(self):
+        return self._proxy
 
 
 class MemberFormPage(QWidget):
@@ -460,20 +518,24 @@ class MemberFormPage(QWidget):
         addr_row1 = QHBoxLayout()
         addr_row1.setSpacing(10)
 
-        # Taluka Dropdown with all 8 talukas of Sabarkantha
-        self.taluka_combo = QComboBox()
-        self.taluka_combo.setEditable(True)
+        # Taluka Dropdown with all 8 talukas of Sabarkantha (non-editable click-only dropdown)
+        self.taluka_combo = TalukaComboBox()
         self.taluka_combo.setFixedHeight(36)
-        self.taluka_combo.setMinimumWidth(130)
+        self.taluka_combo.setMinimumWidth(150)
         self.taluka_combo.setStyleSheet(f"""
             QComboBox {{
                 background-color: #F8FAFC;
                 color: {COLOR_TEXT_MAIN};
                 border: 1px solid {COLOR_BORDER};
                 border-radius: 6px;
-                padding: 0 10px;
+                padding-left: 8px;
+                padding-right: 24px;
                 font-size: 12px;
                 font-weight: 600;
+            }}
+            QComboBox:hover {{
+                background-color: #FFFFFF;
+                border: 1.5px solid {COLOR_PRIMARY};
             }}
             QComboBox:focus {{
                 background-color: #FFFFFF;
@@ -482,18 +544,37 @@ class MemberFormPage(QWidget):
             QComboBox::drop-down {{
                 subcontrol-origin: padding;
                 subcontrol-position: top right;
-                width: 24px;
+                width: 26px;
                 border-left: 1px solid {COLOR_BORDER};
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+                background-color: #F1F5F9;
+            }}
+            QComboBox::drop-down:hover {{
+                background-color: #E2E8F0;
+            }}
+            QComboBox::down-arrow {{
+                image: url({_CHEVRON_ICON_URL});
+                width: 12px;
+                height: 12px;
+            }}
+            QComboBox::down-arrow:hover {{
+                image: url({_CHEVRON_BLUE_ICON_URL});
+                width: 12px;
+                height: 12px;
             }}
             QComboBox QAbstractItemView {{
                 background-color: #FFFFFF;
+                color: {COLOR_TEXT_MAIN};
                 border: 1px solid {COLOR_BORDER};
                 selection-background-color: {COLOR_PRIMARY};
                 selection-color: #FFFFFF;
                 font-size: 12px;
+                padding: 4px;
             }}
         """)
         self._populate_talukas(is_en=False, keep_current=False)
+        self.taluka_combo.currentIndexChanged.connect(self._on_taluka_changed)
         self.city_edit = self.taluka_combo.lineEdit()
 
         # Fixed District: Sabarkantha / સાબરકાંઠા
@@ -574,7 +655,8 @@ class MemberFormPage(QWidget):
                 color: {COLOR_TEXT_MAIN};
                 border: 1px solid {COLOR_BORDER};
                 border-radius: 6px;
-                padding: 0 10px;
+                padding-left: 10px;
+                padding-right: 28px;
                 font-size: 12px;
                 font-weight: 600;
             }}
@@ -585,8 +667,24 @@ class MemberFormPage(QWidget):
             QComboBox::drop-down {{
                 subcontrol-origin: padding;
                 subcontrol-position: top right;
-                width: 24px;
+                width: 26px;
                 border-left: 1px solid {COLOR_BORDER};
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+                background-color: #F1F5F9;
+            }}
+            QComboBox::drop-down:hover {{
+                background-color: #E2E8F0;
+            }}
+            QComboBox::down-arrow {{
+                image: url({_CHEVRON_ICON_URL});
+                width: 12px;
+                height: 12px;
+            }}
+            QComboBox::down-arrow:hover {{
+                image: url({_CHEVRON_BLUE_ICON_URL});
+                width: 12px;
+                height: 12px;
             }}
             QComboBox QAbstractItemView {{
                 background-color: #FFFFFF;
@@ -699,7 +797,33 @@ class MemberFormPage(QWidget):
             QComboBox {{
                 background-color: #F8FAFC; color: {COLOR_TEXT_MAIN};
                 border: 1px solid {COLOR_BORDER}; border-radius: 6px;
-                padding: 0 8px; font-size: 12px; font-weight: 600;
+                padding-left: 10px; padding-right: 28px; font-size: 12px; font-weight: 600;
+            }}
+            QComboBox:focus {{
+                background-color: #FFFFFF;
+                border: 1.5px solid {COLOR_PRIMARY};
+            }}
+            QComboBox::drop-down {{
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 26px;
+                border-left: 1px solid {COLOR_BORDER};
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+                background-color: #F1F5F9;
+            }}
+            QComboBox::drop-down:hover {{
+                background-color: #E2E8F0;
+            }}
+            QComboBox::down-arrow {{
+                image: url({_CHEVRON_ICON_URL});
+                width: 12px;
+                height: 12px;
+            }}
+            QComboBox::down-arrow:hover {{
+                image: url({_CHEVRON_BLUE_ICON_URL});
+                width: 12px;
+                height: 12px;
             }}
         """)
         grid2.addWidget(self.bg_combo, 2, 1, 1, 3)
@@ -971,6 +1095,12 @@ class MemberFormPage(QWidget):
                 return
         self._clear_signature()
 
+    def _on_taluka_changed(self, idx: int) -> None:
+        if idx == 0:
+            self.taluka_combo.blockSignals(True)
+            self.taluka_combo.setCurrentIndex(-1)
+            self.taluka_combo.blockSignals(False)
+
     def _populate_talukas(self, is_en: bool = False, keep_current: bool = True) -> None:
         curr = ""
         if keep_current and hasattr(self, 'taluka_combo'):
@@ -984,6 +1114,7 @@ class MemberFormPage(QWidget):
             self.taluka_combo.addItem(disp, gu_name)
 
         ph = "Select Taluka..." if is_en else "તાલુકો પસંદ કરો..."
+        self.taluka_combo.setPlaceholderText(ph)
         if self.taluka_combo.lineEdit():
             self.taluka_combo.lineEdit().setPlaceholderText(ph)
 
@@ -1000,11 +1131,15 @@ class MemberFormPage(QWidget):
                         if c_idx >= 0:
                             self.taluka_combo.setCurrentIndex(c_idx)
                         else:
-                            self.taluka_combo.setCurrentText(disp)
+                            self.taluka_combo.addItem(disp, gu_name)
+                            self.taluka_combo.setCurrentIndex(self.taluka_combo.count() - 1)
                         matched = True
                         break
                 if not matched:
-                    self.taluka_combo.setCurrentText(curr)
+                    self.taluka_combo.addItem(curr)
+                    self.taluka_combo.setCurrentIndex(self.taluka_combo.count() - 1)
+        else:
+            self.taluka_combo.setCurrentIndex(-1)
         self.taluka_combo.blockSignals(False)
 
     def _populate_education_presets(self, is_en: bool = False, keep_current: bool = True) -> None:
@@ -1065,23 +1200,28 @@ class MemberFormPage(QWidget):
         
         # Taluka selection
         m_city = (member.city or '').strip()
-        idx = self.taluka_combo.findText(m_city)
-        if idx >= 0:
-            self.taluka_combo.setCurrentIndex(idx)
+        if not m_city:
+            self.taluka_combo.setCurrentIndex(-1)
         else:
-            found = False
-            for gu_name, en_name in SABARKANTHA_TALUKAS:
-                if m_city.lower() in (gu_name.lower(), en_name.lower(), 'ઈડર', 'ઇડર'):
-                    disp = en_name if is_en else gu_name
-                    c_idx = self.taluka_combo.findText(disp)
-                    if c_idx >= 0:
-                        self.taluka_combo.setCurrentIndex(c_idx)
-                    else:
-                        self.taluka_combo.setCurrentText(disp)
-                    found = True
-                    break
-            if not found:
-                self.taluka_combo.setCurrentText(m_city)
+            idx = self.taluka_combo.findText(m_city)
+            if idx >= 0:
+                self.taluka_combo.setCurrentIndex(idx)
+            else:
+                found = False
+                for gu_name, en_name in SABARKANTHA_TALUKAS:
+                    if m_city.lower() in (gu_name.lower(), en_name.lower(), 'ઈડર', 'ઇડર'):
+                        disp = en_name if is_en else gu_name
+                        c_idx = self.taluka_combo.findText(disp)
+                        if c_idx >= 0:
+                            self.taluka_combo.setCurrentIndex(c_idx)
+                        else:
+                            self.taluka_combo.addItem(disp, gu_name)
+                            self.taluka_combo.setCurrentIndex(self.taluka_combo.count() - 1)
+                        found = True
+                        break
+                if not found:
+                    self.taluka_combo.addItem(m_city)
+                    self.taluka_combo.setCurrentIndex(self.taluka_combo.count() - 1)
 
         # District (Fixed Sabarkantha)
         dist_val = member.district or ('Sabarkantha' if is_en else 'સાબરકાંઠા')
@@ -1150,7 +1290,7 @@ class MemberFormPage(QWidget):
         ):
             widget.clear()
 
-        self.taluka_combo.setCurrentIndex(0)
+        self.taluka_combo.setCurrentIndex(-1)
         if self.taluka_combo.lineEdit():
             self.taluka_combo.lineEdit().clear()
         if hasattr(self, 'edu_combo'):

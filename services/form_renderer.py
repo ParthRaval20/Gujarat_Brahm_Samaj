@@ -476,7 +476,7 @@ class FormRenderer:
             if not text:
                 return
             rect = QRectF(x, y - 18.0, w, 18.0)
-            p.drawText(rect, align | Qt.AlignmentFlag.AlignBottom, str(text).strip())
+            p.drawText(rect, align | Qt.AlignmentFlag.AlignBottom, text.strip())
 
         # Header Meta: Form No & Date
         draw_val(126, 127, 150, data.get('form_number', ''))

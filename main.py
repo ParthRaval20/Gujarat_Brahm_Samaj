@@ -9,7 +9,10 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from app.config import ensure_dirs, LOG_PATH, APP_NAME, APP_VERSION, APP_ICON_PATH
+from app.config import (
+    ensure_dirs, LOG_PATH, APP_NAME, APP_VERSION, APP_ICON_PATH,
+    CHEVRON_DOWN_PATH, CHEVRON_DOWN_BLUE_PATH,
+)
 
 
 def _setup_logging() -> None:
@@ -46,7 +49,7 @@ def main() -> None:
         log.critical(f'Database initialization failed: {exc}', exc_info=True)
         # Continue — will show error in UI
 
-    from PySide6.QtWidgets import QApplication
+    from PySide6.QtWidgets import QApplication, QToolTip
     from PySide6.QtGui import QFont, QPalette, QColor, QIcon
 
     app = QApplication(sys.argv)
@@ -76,6 +79,16 @@ def main() -> None:
     palette.setColor(QPalette.ColorRole.PlaceholderText, QColor('#94A3B8'))
     app.setPalette(palette)
 
+    # Explicitly configure QToolTip palette for crisp dark-slate tooltip appearance
+    tt_palette = QPalette()
+    tt_palette.setColor(QPalette.ColorRole.Window, QColor('#0F172A'))
+    tt_palette.setColor(QPalette.ColorRole.WindowText, QColor('#FFFFFF'))
+    tt_palette.setColor(QPalette.ColorRole.ToolTipBase, QColor('#0F172A'))
+    tt_palette.setColor(QPalette.ColorRole.ToolTipText, QColor('#FFFFFF'))
+    tt_palette.setColor(QPalette.ColorRole.Text, QColor('#FFFFFF'))
+    tt_palette.setColor(QPalette.ColorRole.Base, QColor('#0F172A'))
+    QToolTip.setPalette(tt_palette)
+
     # Register custom Gujarati fonts
     from PySide6.QtGui import QFontDatabase
     from app.config import GUJARATI_FONT_REGULAR, GUJARATI_FONT_BOLD
@@ -91,7 +104,9 @@ def main() -> None:
     app.setFont(font)
 
     # Global stylesheet ensuring proper defaults without cascading dark text to dark backgrounds
-    app.setStyleSheet("""
+    chevron_url = CHEVRON_DOWN_PATH.replace('\\', '/')
+    chevron_blue_url = CHEVRON_DOWN_BLUE_PATH.replace('\\', '/')
+    global_stylesheet = """
         QMainWindow, QDialog {
             background-color: #F8FAFC;
             font-family: 'Segoe UI', 'Noto Sans Gujarati', 'Arial Unicode MS', sans-serif;
@@ -118,11 +133,43 @@ def main() -> None:
             selection-background-color: #2563EB;
             selection-color: #FFFFFF;
         }
-        QDateEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+        QDateEdit, QSpinBox, QDoubleSpinBox {
             background-color: #FFFFFF;
             color: #0F172A;
             selection-background-color: #2563EB;
             selection-color: #FFFFFF;
+        }
+        QComboBox {
+            background-color: #FFFFFF;
+            color: #0F172A;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding-left: 10px;
+            padding-right: 28px;
+            selection-background-color: #2563EB;
+            selection-color: #FFFFFF;
+        }
+        QComboBox::drop-down {
+            subcontrol-origin: padding;
+            subcontrol-position: top right;
+            width: 26px;
+            border-left: 1px solid #CBD5E1;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            background-color: #F1F5F9;
+        }
+        QComboBox::drop-down:hover {
+            background-color: #E2E8F0;
+        }
+        QComboBox::down-arrow {
+            image: url(__CHEVRON_URL__);
+            width: 12px;
+            height: 12px;
+        }
+        QComboBox::down-arrow:hover {
+            image: url(__CHEVRON_BLUE_URL__);
+            width: 12px;
+            height: 12px;
         }
         QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus, QDateEdit:focus, QSpinBox:focus, QComboBox:focus {
             border-color: #2563EB;
@@ -173,12 +220,13 @@ def main() -> None:
             font-weight: bold;
         }
         QToolTip {
-            background: #0F172A;
-            color: white;
-            border: none;
-            padding: 4px 8px;
+            background-color: #0F172A;
+            color: #FFFFFF;
+            border: 1px solid #334155;
+            padding: 5px 9px;
             font-size: 11px;
-            border-radius: 4px;
+            font-weight: 500;
+            border-radius: 6px;
         }
         QScrollBar:vertical {
             background: #F1F5F9;
@@ -196,7 +244,8 @@ def main() -> None:
         QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
             height: 0;
         }
-    """)
+    """.replace('__CHEVRON_URL__', chevron_url).replace('__CHEVRON_BLUE_URL__', chevron_blue_url)
+    app.setStyleSheet(global_stylesheet)
 
     from ui.main_window import MainWindow
     window = MainWindow()

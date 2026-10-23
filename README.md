@@ -138,21 +138,20 @@ GujaratBrahmSamaj/
 │
 ├── utils/                         ← Helper utilities
 │   ├── gujarati_search.py         ← Phonetic transliteration & multi-script matching
-│   ├── gujarati_utils.py          ← Unicode text helpers & number conversion
 │   ├── date_utils.py              ← Age calculation & date formatting
 │   ├── file_utils.py              ← Filename sanitization & path helpers
 │   └── validators.py              ← Input validation rules
 │
 ├── assets/                        ← Bundled application assets
 │   ├── fonts/                     ← Noto Sans Gujarati (Regular & Bold)
-│   ├── icons/                     ← Application icon (app_icon.ico)
-│   └── images/                    ← Logos & religious emblems (Gayatri, Parshuram, official_form)
+│   ├── icons/                     ← Application icon & SVG chevron dropdown indicators
+│   └── images/                    ← Official logos & emblems (Gayatri, Parshuram, official_form)
 │
 ├── data/                          ← Local database directory (brahm_samaj.db)
 ├── backups/                       ← Automated & manual database backup snapshots
 ├── exports/                       ← Exported PDF forms and Excel/CSV files
 ├── logs/                          ← Runtime execution logs (application.log)
-├── tests/                         ← Automated pytest test suites (10 passing suites)
+├── tests/                         ← Automated pytest test suites (6 consolidated suites)
 └── Docs/                          ← Project documentation suite (v1.3)
     ├── prd.md                     ← Product Requirements Document
     ├── trd.md                     ← Technical Requirements Document

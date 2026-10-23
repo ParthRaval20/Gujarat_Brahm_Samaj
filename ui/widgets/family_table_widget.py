@@ -19,13 +19,13 @@ from app.config import (
 )
 
 RELATIONS_GU = [
-    '', 'પત્ની', 'પુત્ર', 'પુત્રી', 'પતિ',
+    '', 'પત્ની', 'પુત્ર', 'પુત્રી', 'પુત્રવધૂ', 'પતિ',
     'પિતા', 'માતા', 'ભાઈ', 'બહેન',
     'દાદા', 'દાદી', 'અન્ય',
 ]
 
 RELATIONS_EN = [
-    '', 'Wife', 'Son', 'Daughter', 'Husband',
+    '', 'Wife', 'Son', 'Daughter', 'Daughter-in-law', 'Husband',
     'Father', 'Mother', 'Brother', 'Sister',
     'Grand Father', 'Grand Mother', 'Other',
 ]
@@ -35,6 +35,8 @@ GU_TO_EN_REL: dict[str, str] = {
     'પત્ની': 'Wife',
     'પુત્ર': 'Son',
     'પુત્રી': 'Daughter',
+    'પુત્રવધૂ': 'Daughter-in-law',
+    'પુત્રવધૂ (Daughter-in-law)': 'Daughter-in-law',
     'પતિ': 'Husband',
     'પિતા': 'Father',
     'માતા': 'Mother',
@@ -45,7 +47,9 @@ GU_TO_EN_REL: dict[str, str] = {
     'અન્ય': 'Other',
 }
 
-EN_TO_GU_REL: dict[str, str] = {v: k for k, v in GU_TO_EN_REL.items() if k}
+EN_TO_GU_REL: dict[str, str] = {v: k for k, v in GU_TO_EN_REL.items() if k and '(' not in k}
+EN_TO_GU_REL['Daughter-in-law'] = 'પુત્રવધૂ'
+EN_TO_GU_REL['Daughter in law'] = 'પુત્રવધૂ'
 
 
 class FamilyTableWidget(QWidget):

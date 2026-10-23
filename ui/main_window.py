@@ -56,7 +56,8 @@ class MainWindow(QMainWindow):
 
     def _setup_ui(self):
         central = QWidget()
-        central.setStyleSheet(f"background-color: {COLOR_BG};")
+        central.setObjectName("centralWidget")
+        central.setStyleSheet(f"#centralWidget {{ background-color: {COLOR_BG}; }}")
         self.setCentralWidget(central)
         root = QHBoxLayout(central)
         root.setContentsMargins(0, 0, 0, 0)
@@ -78,7 +79,8 @@ class MainWindow(QMainWindow):
 
         # Stacked Pages
         self.stack = QStackedWidget()
-        self.stack.setStyleSheet(f"background-color: {COLOR_BG}; border: none;")
+        self.stack.setObjectName("appStack")
+        self.stack.setStyleSheet(f"#appStack {{ background-color: {COLOR_BG}; border: none; }}")
         right_layout.addWidget(self.stack, stretch=1)
 
         # Global Footer (Shown on every page)
@@ -206,7 +208,7 @@ class MainWindow(QMainWindow):
         # ── Navigation Items ─────────────────────────────────────────
         nav_container = QWidget()
         nav_container.setObjectName("navContainer")
-        nav_container.setStyleSheet("background-color: #FFFFFF;")
+        nav_container.setStyleSheet("#navContainer { background-color: #FFFFFF; }")
         nav_layout = QVBoxLayout(nav_container)
         nav_layout.setContentsMargins(12, 16, 12, 16)
         nav_layout.setSpacing(4)

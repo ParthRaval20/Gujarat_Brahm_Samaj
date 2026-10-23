@@ -90,7 +90,8 @@ class DashboardPage(QWidget):
         scroll_area.setStyleSheet(f"QScrollArea {{ background-color: {COLOR_BG}; border: none; }}")
 
         container = QWidget()
-        container.setStyleSheet(f"background-color: {COLOR_BG};")
+        container.setObjectName("dashboardContainer")
+        container.setStyleSheet(f"#dashboardContainer {{ background-color: {COLOR_BG}; }}")
         self.layout = QVBoxLayout(container)
         self.layout.setContentsMargins(28, 24, 28, 28)
         self.layout.setSpacing(22)
@@ -908,6 +909,14 @@ class DashboardPage(QWidget):
                 QPushButton:hover {
                     background-color: #DBEAFE;
                 }
+                QToolTip {
+                    background-color: #0F172A;
+                    color: #FFFFFF;
+                    border: 1px solid #334155;
+                    border-radius: 6px;
+                    padding: 5px 9px;
+                    font-size: 11px;
+                }
             """)
             btn_view.clicked.connect(lambda _, mid=m.id: self._nav("profile", member_id=mid))
 
@@ -926,6 +935,14 @@ class DashboardPage(QWidget):
                 QPushButton:hover {
                     background-color: #D1FAE5;
                 }
+                QToolTip {
+                    background-color: #0F172A;
+                    color: #FFFFFF;
+                    border: 1px solid #334155;
+                    border-radius: 6px;
+                    padding: 5px 9px;
+                    font-size: 11px;
+                }
             """)
             btn_edit.clicked.connect(lambda _, mid=m.id: self._nav("edit", member_id=mid))
 
@@ -943,6 +960,14 @@ class DashboardPage(QWidget):
                 }
                 QPushButton:hover {
                     background-color: #EDE9FE;
+                }
+                QToolTip {
+                    background-color: #0F172A;
+                    color: #FFFFFF;
+                    border: 1px solid #334155;
+                    border-radius: 6px;
+                    padding: 5px 9px;
+                    font-size: 11px;
                 }
             """)
             btn_print.clicked.connect(lambda _, mid=m.id: self._nav("form_preview", member_id=mid))

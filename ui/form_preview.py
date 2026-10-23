@@ -5,6 +5,7 @@ Form preview page — generates PDF and shows instant authentic preview + print/
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QPixmap, QImage, QPainter, QCursor
@@ -179,16 +180,18 @@ class FormPreviewPage(QWidget):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.Box)
-        scroll.setStyleSheet('border: 1px solid #D0D5E8; background: #E8ECF8;')
+        scroll.setStyleSheet('QScrollArea { border: 1px solid #D0D5E8; background: #E8ECF8; }')
 
         self.preview_container = QWidget()
-        self.preview_container.setStyleSheet('background: #E8ECF8;')
+        self.preview_container.setObjectName("previewContainer")
+        self.preview_container.setStyleSheet("#previewContainer { background: #E8ECF8; }")
         preview_layout = QVBoxLayout(self.preview_container)
         preview_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # A4 Paper sheet card for preview
         self.paper_frame = QFrame()
-        self.paper_frame.setStyleSheet('background: white; border: 1px solid #B0B8D8;')
+        self.paper_frame.setObjectName("paperFrame")
+        self.paper_frame.setStyleSheet("#paperFrame { background: white; border: 1px solid #B0B8D8; }")
         pf_layout = QVBoxLayout(self.paper_frame)
         pf_layout.setContentsMargins(0, 0, 0, 0)
 

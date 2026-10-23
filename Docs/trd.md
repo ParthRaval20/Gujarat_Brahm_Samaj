@@ -272,7 +272,6 @@ GujaratBrahmSamaj/
 │   ├── date_utils.py              ← Age calculation & date formatting
 │   ├── file_utils.py              ← Filename sanitization
 │   ├── gujarati_search.py         ← Phonetic transliteration & multi-script matching
-│   ├── gujarati_utils.py          ← Unicode text helpers
 │   └── validators.py              ← Input validation rules
 │
 ├── assets/
@@ -280,11 +279,12 @@ GujaratBrahmSamaj/
 │   │   ├── NotoSansGujarati-Regular.ttf
 │   │   └── NotoSansGujarati-Bold.ttf
 │   ├── icons/
-│   │   └── app_icon.ico
+│   │   ├── app_icon.ico
+│   │   ├── chevron_down.svg
+│   │   └── chevron_down_blue.svg
 │   └── images/
 │       ├── logo.png
 │       ├── gayatri_logo.png
-│       ├── parshuram_logo.png
 │       └── official_form.jpg
 │
 ├── data/

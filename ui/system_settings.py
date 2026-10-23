@@ -50,7 +50,8 @@ class SystemSettingsPage(QWidget):
         scroll.setStyleSheet(f"QScrollArea {{ background-color: {COLOR_BG}; border: none; }}")
 
         container = QWidget()
-        container.setStyleSheet(f"background-color: {COLOR_BG};")
+        container.setObjectName("settingsContainer")
+        container.setStyleSheet(f"#settingsContainer {{ background-color: {COLOR_BG}; }}")
         self.layout = QVBoxLayout(container)
         self.layout.setContentsMargins(28, 24, 28, 28)
         self.layout.setSpacing(20)
